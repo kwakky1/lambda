@@ -1,4 +1,8 @@
 spring:
+  http:
+    encoding:
+      enable:
+        true
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://127.0.0.1:3306/mariadb
@@ -22,3 +26,9 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+server:
+  port: 5000
+  servlet:
+    encoding:
+      charset: UTF-8
+    force: true
