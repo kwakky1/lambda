@@ -16,6 +16,7 @@
     <div>
       <input
               id="search"
+              @keyup.enter="search"
               v-model="searchWord"
               type="text"
               style=" background-repeat: no-repeat; background-position: 88% 50%, 98% 50%;"
@@ -30,19 +31,6 @@
               value="Google 검색"
       />
     </div>
-
-    <div id="bottom">
-      <div id="bottom_left">
-        <a>광고</a>
-        <a>비즈니스</a>
-        <a>Google 정보</a>
-      </div>
-      <div id="bottom_right">
-        <a>개인정보처리방침</a>
-        <a>약관</a>
-        <a>설정</a>
-      </div>
-    </div>
   </div>
 </template>
 <script>
@@ -54,8 +42,11 @@
     },
     methods: {
       search() {
-        alert("1");
-        this.$store.dispatch("crawling/search", this.searchWord);
+        switch (this.searchWord) {
+          case "벅스":this.$store.dispatch("crawling/search", {searchWord :this.searchWord}); break;
+          case "축구":this.$store.dispatch("soccer/search",{searchWord :this.searchWord}); break;
+          default : alert("벅스 나 축구 둘 중 하나만 입력하세요!"); break;
+        }
       }
     }
   };
@@ -136,24 +127,5 @@
   #Feeling_Lucky:hover {
     border: 1px solid #c6c6c6;
     color: black;
-  }
-  #bottom {
-    border: 1px solid #e4e4e4;
-    border-right: none;
-    border-left: none;
-    position: absolute;
-    bottom: 0px;
-    background-color: #f2f2f2;
-    height: 50px;
-    width: 100%;
-    min-width: 1050px;
-  }
-  #bottom_left {
-    float: left;
-    padding: 15px;
-  }
-  #bottom_right {
-    float: right;
-    padding: 15px;
   }
 </style>

@@ -4,7 +4,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Data
-@AllArgsConstructor
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity(name="music")
 public class Music {
