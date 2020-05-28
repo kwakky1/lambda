@@ -7,11 +7,7 @@ const state={
 }
 const actions ={
     async search({commit},searchWord){
-        axios.post(state.context+`soccer`,searchWord,{
-            authorization : 'JWT fkdfj..',
-            Accept: 'application/json',
-            ContentType : 'application/json'
-        })
+        axios.get(state.context+`soccer/`+searchWord)
             .then(({data})=>{
                 commit("SEARCH",data)
                 router.push("/soccer")

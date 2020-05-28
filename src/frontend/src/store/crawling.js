@@ -31,7 +31,7 @@ const mutations = {
         state.count = data.count;
         data.list.forEach(item => {
             state.bugsmusic.push({
-                seq: item.seq,
+                seq: item.sqe,
                 artist: item.artists,
                 title: item.title,
                 thumbnail: item.thumbnail

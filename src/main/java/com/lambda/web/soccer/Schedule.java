@@ -2,6 +2,7 @@ package com.lambda.web.soccer;
 
 
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

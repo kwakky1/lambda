@@ -1,14 +1,16 @@
 package com.lambda.web.proxy;
 
+import com.lambda.web.movie.Movie;
+import com.lambda.web.movie.MovieRepository;
+import com.lambda.web.music.Music;
+import com.lambda.web.music.MusicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
+import java.util.List;
 
 
 @CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
@@ -16,24 +18,36 @@ import java.util.HashMap;
 public class ProxyController{
     @Autowired Box<Object> box;
     @Autowired Crawler crawler;
+    @Autowired MovieCrawler movieCrawler;
     @Autowired Proxy pxy;
+    @Autowired FileUploader upload;
+    @Autowired MusicRepository musicRepository;
+    @Autowired MovieRepository movieRepository;
 
     @PostMapping("/bugsmusic")
     public HashMap<String,Object> bugsmusic(@RequestBody String searchWord){
         pxy.print("넘어온 키워드: "+searchWord);
         box.clear();
-        ArrayList<HashMap<String, String>> list = crawler.bugsMusic();
-        box.put("list", list);
-        pxy.print("*********");
-        pxy.print("조회한 수: "+list.size());
-        box.put("count", list.size());
+        if(musicRepository.count() == 0) crawler.bugsMusic();
+        List<Music> list = musicRepository.findAll();
+        box.put("list",list);
+        box.put("count",list.size());
         return box.get();
-
     }
-    @PostMapping("/soccer")
-    public HashMap<String ,Object> soccer(@RequestBody String searchWord){
+    @GetMapping("/soccer/{searchWord}")
+    public HashMap<String ,Object> soccer(@PathVariable String searchWord){
         pxy.print("넘어온 키워드"+searchWord);
+        upload.upload();
         return null;
+    }
+    @GetMapping("/movie/{searchWord}")
+    public HashMap<String ,Object> movie(@PathVariable String searchWord){
+        pxy.print("넘어온 키워드"+searchWord);
+        if(movieRepository.count()==0){movieCrawler.movie();}
+        List<Movie> list = movieRepository.findAll();
+        box.put("list",list);
+        box.put("count",list.size());
+        return box.get();
     }
 }
 
