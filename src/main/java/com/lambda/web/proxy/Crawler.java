@@ -1,5 +1,7 @@
 package com.lambda.web.proxy;
 
+import com.lambda.web.movie.Movie;
+import com.lambda.web.movie.MovieRepository;
 import com.lambda.web.music.Music;
 import com.lambda.web.music.MusicRepository;
 import org.jsoup.Connection;
@@ -19,6 +21,7 @@ public class Crawler extends Proxy {
     @Autowired Inventory<Music> inventory;
     @Autowired Box<String> box;
     @Autowired MusicRepository musicRepository;
+    @Autowired MovieRepository movieRepository;
     public void bugsMusic(){
         inventory.clear();
         try{
@@ -43,4 +46,29 @@ public class Crawler extends Proxy {
             print("에러발생");
         }
     }
+
+    public void movie(){
+        inventory.clear();
+        try{
+            String url ="https://movie.naver.com/movie/sdb/rank/rmovie.nhn";
+            Connection.Response homepage = Jsoup.connect(url).method(Connection.Method.GET)
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36\"")
+                    .execute();
+            Document d = homepage.parse();
+            Elements arr = d.select("div.tit3");
+            Elements date = d.select("p.r_date");
+            Movie movie = null;
+            for(int i=0;i < arr.size(); i++){
+                movie = new Movie();
+                movie.setRank(string(i+1));
+                movie.setTitle(arr.get(i).text());
+                movie.setRankDate(date.get(0).text());
+                movieRepository.save(movie);
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

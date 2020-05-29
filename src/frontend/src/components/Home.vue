@@ -44,8 +44,8 @@
       search() {
         switch (this.searchWord) {
           case "벅스":this.$store.dispatch("crawling/search", this.searchWord); break;
-          case "축구":this.$store.dispatch("soccer/search",this.searchWord); break;
-          case "영화":this.$store.dispatch("movie/search",this.searchWord); break;
+          case "축구":this.$store.dispatch("crawling/search",this.searchWord); break;
+          case "영화":this.$store.dispatch("crawling/search",this.searchWord); break;
           default : alert("벅스, 축구, 영화 중 하나만 입력하세요!"); break;
         }
       }

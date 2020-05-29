@@ -1,0 +1,35 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lambda.web.mappers.MovieMapper">
+    <insert id="insertMovie"
+            parameterType="domain.blog.Author">
+        insert rank, title, rank_date into movie
+        values (#{rank},#{title},#{rankDate})
+    </insert>
+
+    <update id="updateMovie"
+            parameterType="com.lambda.web.movie.MovieDTO">
+        update set title = #{title} from movie
+        where movie_seq like #{movieSeq}
+    </update>
+
+    <delete id="deleteMovie"
+            parameterType="com.lambda.web.movie.MovieDTO">
+        delete from movie where movie_seq like #{movieSeq}
+    </delete>
+    <select id="selectMovies" resultType="com.lambda.web.movie.MovieDTO">
+      select movie_seq movieSeq, rank, title, rank_date rankDate from movie
+    </select>
+    <select id="selectMovie" resultType="com.lambda.web.movie.MovieDTO">
+      select movie_seq movieSeq, rank, title, rank_date rankDate
+      from movie
+      where movie_seq = #{movieSeq}
+    </select>
+    <select id="count" resultType="int">
+      select count(*)
+      from movie
+      where id = #{id}
+    </select>
+
+</mapper>

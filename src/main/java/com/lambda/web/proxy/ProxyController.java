@@ -18,19 +18,19 @@ import java.util.List;
 public class ProxyController{
     @Autowired Box<Object> box;
     @Autowired Crawler crawler;
-    @Autowired MovieCrawler movieCrawler;
     @Autowired Proxy pxy;
     @Autowired FileUploader upload;
     @Autowired MusicRepository musicRepository;
     @Autowired MovieRepository movieRepository;
 
-    @PostMapping("/bugsmusic")
+    @GetMapping("/bugsMusic/{searchWord}")
     public HashMap<String,Object> bugsmusic(@RequestBody String searchWord){
         pxy.print("넘어온 키워드: "+searchWord);
         box.clear();
         if(musicRepository.count() == 0) crawler.bugsMusic();
         List<Music> list = musicRepository.findAll();
         box.put("list",list);
+        box.put("search",searchWord);
         box.put("count",list.size());
         return box.get();
     }
@@ -43,10 +43,11 @@ public class ProxyController{
     @GetMapping("/movie/{searchWord}")
     public HashMap<String ,Object> movie(@PathVariable String searchWord){
         pxy.print("넘어온 키워드"+searchWord);
-        if(movieRepository.count()==0){movieCrawler.movie();}
+        if(movieRepository.count()==0){crawler.movie();}
         List<Movie> list = movieRepository.findAll();
         box.put("list",list);
         box.put("count",list.size());
+        box.put("search",searchWord);
         return box.get();
     }
 }

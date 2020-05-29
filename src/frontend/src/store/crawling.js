@@ -4,44 +4,79 @@ import router from "@/router";
 const state = {
     context: "http://localhost:5000/",
     bugsmusic: [],
+    soccer : [],
+    movie : [],
     count: 0
 };
 const actions = {
-    async search({ commit }, searchWord) {
-        alert("검색어: " + searchWord);
-        axios
-            .post(state.context + `bugsmusic`, searchWord, {
-                authorization: "JWT fefege..",
-                Accept: "application/json",
-                ContentType: "application/json"
-            })
-            .then(({ data }) => {
-                commit("SEARCH", data);
-                router.push("/retriever");
-            })
-            .catch(() => {
-                alert("통신 실패 !");
-            });
+    async search({commit},searchWord){
+        switch (searchWord) {
+            case '벅스':
+                axios.get(state.context+`bugsMusic/`+searchWord)
+                .then(({data})=>{
+                    commit("SEARCH",data)
+                    router.push("/retriever")
+                })
+                .catch(()=>{
+                    alert("통신실패")
+                })
+                break;
+            case '축구':
+                axios.get(state.context+`soccer/`+searchWord)
+                    .then(({data})=>{
+                        commit("SEARCH",data)
+                        router.push("/soccer")
+                    })
+                    .catch(()=>{
+                        alert("통신실패")
+                    })
+                break;
+            case '영화':
+                axios.get(state.context+`movie/`+searchWord)
+                    .then(({data})=>{
+                        commit("SEARCH",data)
+                        router.push("/movie")
+                    })
+                    .catch(()=>{
+                        alert("통신실패")
+                    })
+                break;
+        }
     }
 };
 const mutations = {
     SEARCH(state, data) {
-        alert("뮤데이션에서 결과 수 : " + data.count);
-        state.bugsmusic = [];
-        state.count = data.count;
-        data.list.forEach(item => {
-            state.bugsmusic.push({
-                seq: item.sqe,
-                artist: item.artists,
-                title: item.title,
-                thumbnail: item.thumbnail
-            });
-        });
+        switch (data.searchWord) {
+            case "벅스": state.bugsmusic = [];
+                state.count = data.count;
+                data.list.forEach(item => {
+                    state.bugsmusic.push({
+                        seq: item.sqe,
+                        artist: item.artists,
+                        title: item.title,
+                        thumbnail: item.thumbnail
+                    });
+                });
+                break;
+            case "축구": state.soccer = data
+                break;
+            case "영화": state.movie =[];
+                state.count = data.count
+                data.list.forEach(item=>{
+                    state.movie.push({
+                        seq : item.movieNo,
+                        movieName : item.movieName
+                    })
+                })
+                break;
+        }
     }
 };
 const getters = {
     bugsmusic: state => state.bugsmusic,
-    count: state => state.count
+    movie : state=> state.movie,
+    count: state => state.count,
+    soccer : state => state.soccer
 };
 
 export default {
