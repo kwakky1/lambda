@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lambda.web.mappers.MovieMapper">
     <insert id="insertMovie"
-            parameterType="domain.blog.Author">
+            parameterType="com.lambda.web.movie.MovieDTO">
         insert rank, title, rank_date into movie
         values (#{rank},#{title},#{rankDate})
     </insert>
@@ -18,13 +18,17 @@
             parameterType="com.lambda.web.movie.MovieDTO">
         delete from movie where movie_seq like #{movieSeq}
     </delete>
-    <select id="selectMovies" resultType="com.lambda.web.movie.MovieDTO">
-      select movie_seq movieSeq, rank, title, rank_date rankDate from movie
-    </select>
-    <select id="selectMovie" resultType="com.lambda.web.movie.MovieDTO">
+    <select id="selectMovies" resultType="com.lambda.web.movie.MovieDTO"
+    parameterType="com.lambda.web.proxy.Pager">
       select movie_seq movieSeq, rank, title, rank_date rankDate
       from movie
-      where movie_seq = #{movieSeq}
+      limit #{rowStart},#{pageSize}
+    </select>
+    <select id="selectMovie" resultType="com.lambda.web.movie.MovieDTO"
+    parameterType="string">
+      select movie_seq movieSeq, rank, title, rank_date rankDate
+      from movie
+      where movie_seq = #{value}
     </select>
     <select id="count" resultType="int">
       select count(*)

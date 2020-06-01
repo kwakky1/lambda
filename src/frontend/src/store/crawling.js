@@ -32,7 +32,7 @@ const actions = {
                     })
                 break;
             case '영화':
-                axios.get(state.context+`movie/`+searchWord)
+                axios.get(state.context+`movie/list/0/${searchWord}`)
                     .then(({data})=>{
                         commit("SEARCH",data)
                         router.push("/movie")
@@ -64,8 +64,10 @@ const mutations = {
                 state.count = data.count
                 data.list.forEach(item=>{
                     state.movie.push({
-                        seq : item.movieNo,
-                        movieName : item.movieName
+                        movieSeq: item.movieSeq,
+                        rank : item.rank,
+                        title : item.title,
+                        rankDate : item.rankDate
                     })
                 })
                 break;
