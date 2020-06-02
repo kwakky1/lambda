@@ -30,21 +30,13 @@
 </template>
 
 <script>
-    import { mapState } from "vuex";
+
 
     export default {
-        data () {
-            return {
-                page: 1
+        methods :{
+            search(){
+
             }
-        },
-        computed: {
-            ...mapState({
-
-                count: state => state.crawling.count,
-                bugsmusic: state => state.crawling.bugsmusic
-
-            })
         }
     };
 </script>
