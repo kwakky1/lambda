@@ -33,7 +33,6 @@
     <select id="count" resultType="int">
       select count(*)
       from movie
-      where id = #{id}
     </select>
 
 </mapper>

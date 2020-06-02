@@ -14,6 +14,8 @@ public class Pager {
             rowEnd, pageEnd, nextBlock,
             pageSize, blockSize,
             pageNow, blockNow;
+    private boolean existPreV, existNext;
+    private String searchWord;
     public void paging(){
         rowCount = movieMapper.count();
         rowStart = pageNow * pageSize; // 0
