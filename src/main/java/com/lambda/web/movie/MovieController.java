@@ -19,29 +19,20 @@ public class MovieController extends Proxy {
     @Autowired Proxy pxy;
     @Autowired Box<Object> box;
     @Autowired MovieRepository movieRepository;
-    @GetMapping("/list/{pageNumber}/{searchWord}")
+    @GetMapping("/{searchWord}/{pageNumber}")
     public Map<?,?> list(@PathVariable("pageNumber") String pageNumber,
                          @PathVariable("searchWord") String searchWord){
-        if(searchWord.equals("")){
-            pxy.print("검색어 없음");
-        } else {
-            pxy.print("검색어가: " + searchWord);
-        }
         pager.setPageNow(pxy.interger(pageNumber));
         pager.setBlockSize(5);
         pager.setPageSize(5);
         pager.paging();
         IFunction<Pager, List<MovieDTO>> f = movieMapper::selectMovies;
-        List<MovieDTO> l = f.apply(pager);
+        List<MovieDTO> list = f.apply(pager);
         pxy.print("**************\n");
-        for(MovieDTO m : l) {
-            pxy.print(m.toString());
-        }
-        pager.setSearchWord(searchWord);
+        pxy.print(list.toString());
         box.clear();
-        box.put("list",l);
+        box.put("list",list);
         box.put("pager",pager);
         return box.get();
     }
-
 }
