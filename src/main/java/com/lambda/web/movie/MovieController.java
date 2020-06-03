@@ -22,6 +22,7 @@ public class MovieController extends Proxy {
     @GetMapping("/{searchWord}/{pageNumber}")
     public Map<?,?> list(@PathVariable("pageNumber") String pageNumber,
                          @PathVariable("searchWord") String searchWord){
+        pxy.print("넘어온 페이지 번호 "+pageNumber);
         pager.setPageNow(pxy.interger(pageNumber));
         pager.setBlockSize(5);
         pager.setPageSize(5);
@@ -29,7 +30,9 @@ public class MovieController extends Proxy {
         IFunction<Pager, List<MovieDTO>> f = movieMapper::selectMovies;
         List<MovieDTO> list = f.apply(pager);
         pxy.print("**************\n");
-        pxy.print(list.toString());
+        for(MovieDTO m : list){
+            pxy.print(m.toString());
+        }
         box.clear();
         box.put("list",list);
         box.put("pager",pager);

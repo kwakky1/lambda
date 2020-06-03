@@ -1,6 +1,7 @@
 <template>
     <div>
         <h3>검색결과 : {{pager.rowCount}}</h3>
+        <a @click="myAlert('aaaa')">테스트</a>
         <v-simple-table>
             <template v-slot:default>
                 <thead>
@@ -23,10 +24,9 @@
         </v-simple-table>
         <div class="text-center" >
             <div  style="margin: 0 auto; width : 500px; height: 100px; ">
-            <span v-if= existPre style="width: 50px; height: 50px; border: 1px solid black; margin-right: 5px;">이전</span>
-            <span v-for = "i in pages" :key="i"  style="width: 50px; height: 50px; border: 1px solid black;">{{i}}</span>
-            <span v-if= existNext style="width: 50px; height: 50px; border: 1px solid black; margin-right: 5px;">다음</span>
-            </div>
+            <span  v-if= pager.existPrev style="width: 50px; height: 50px; border: 1px solid black; margin-right: 5px; cursor: pointer;">이전</span>
+            <span @click="transferPage(i)" v-for = "i in pages" :key="i"  style="width: 50px; height: 50px; border: 1px solid black; cursor: pointer;">{{i}}</span>
+            <span @click="nextPage(4)"v-if= pager.existNext style="width: 50px; height: 50px; border: 1px solid black; margin-right: 5px; cursor: pointer;">다음</span>            </div>
             <!--<v-pagination v-model="page" :length="5" :total-visible="5"></v-pagination>-->
         </div>
     </div>
@@ -34,44 +34,37 @@
 
 <script>
     import {mapState} from 'vuex'
-    import axios from "axios";
+    import {proxy} from "./mixins/proxy";
     export default {
-        data(){
-            return{
-                pageNumber : 0,
-                existPre : true,
-                existNext : true,
-                pages : [],
-                list: [],
-                pager: {},
-                totalCount: '',
-            }
-        },
+        mixins :[proxy],
         created(){
-            alert("무비 크리티드 실행됨")
-            axios.get( `${this.$store.state.search.context}/movie/${this.$store.state.search.searchWord}/${this.$store.state.search.pageNumber}`)
-                .then(res=>{
-                    res.data.list.forEach(elem => {this.list.push(elem)})
-                    this.pager = res.data.pager
-                    let i = this.pager.pageStart+1
-                    let arr = []
-                    for(;i<=this.pager.pageEnd+1;i++){
-                        arr.push(i)
-                    }
-                    this.pages = arr
-                })
-                .catch(err=>{
-                    alert(`통신실패! ${err}`)
-                })
+            let json = proxy.methods.paging(`${this.$store.state.search.context}/movie/null/0`)
+            this.$store.state.search.list = json.movies
+            this.$store.state.search.pages = json.pages
+            this.$store.state.search.pager = json.temp
+
         },
         computed :{
             ...mapState({
-                count : state => state.crawling.count,
-                movie : state => state.crawling.movie,
+                list: state => state.search.list,
+                pages: state => state.search.pages,
+                pager: state => state.search.pager
 
             })
+        },
+        methods :{
+            transferPage(d){
+                alert("페이지: "+(d-1))
+                this.$store.dispatch('search/transferPage',{cate :'movie',searchWord : 'null', pageNumber : d-1})
+            },
+            nextPage(d){
+                this.$store.dispatch('search/transferPage',{cate :'movie',searchWord : 'null', pageNumber : `${this.$store.state.search.pages.pageStart}`+d})
+            }
         }
+
     }
+
+
 </script>
 
 <style scoped>
