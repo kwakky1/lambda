@@ -23,12 +23,9 @@ public class Pager {
         pageCount =(rowCount%pageSize !=0)?rowCount / pageSize + 1: rowCount / pageSize ; // 10
         pageStart = blockNow *  blockSize; // 0
         pageEnd =(blockNow != blockCount-1)? pageStart + (blockSize - 1): pageCount-1 ; // 4
-        pageSize = 5;
-        pageNow = 0;
         blockCount =(pageCount%blockSize !=0)?pageCount / blockSize + 1: pageCount / blockSize ; // 2
         prevBlock = pageStart - blockSize; // 0
         nextBlock = pageStart + blockSize; // 1
-        blockSize = 5;
         blockNow = pageNow / blockSize; // 0
         existPrev = blockNow !=0;
         existNext = (blockNow+1) != blockCount;

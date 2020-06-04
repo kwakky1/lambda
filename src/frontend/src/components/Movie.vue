@@ -1,6 +1,12 @@
 <template>
     <div>
         <h3>검색결과 : {{pager.rowCount}}</h3>
+        <span  style="float: right">
+            <input id="searchWord"  @keyup.enter="search" type="text" style="border: 1px solid black">
+            <button @click="search()" style="cursor: pointer">
+                검색
+            </button>
+        </span>
         <a @click="myAlert('aaaa')">테스트</a>
         <v-simple-table>
             <template v-slot:default>
@@ -16,7 +22,7 @@
                 <tr v-for="item of list" :key="item.movieSeq">
                     <td>{{ item.movieSeq }}</td>
                     <td>{{ item.rank }}</td>
-                    <td>{{item.title}}</td>
+                    <td><a @click="retrieveOne(item.movieSeq)" href="#">{{item.title}}</a></td>
                     <td>{{ item.rankDate }}</td>
                 </tr>
                 </tbody>
@@ -24,9 +30,10 @@
         </v-simple-table>
         <div class="text-center" >
             <div  style="margin: 0 auto; width : 500px; height: 100px; ">
-            <span  v-if= pager.existPrev style="width: 50px; height: 50px; border: 1px solid black; margin-right: 5px; cursor: pointer;">이전</span>
-            <span @click="transferPage(i)" v-for = "i in pages" :key="i"  style="width: 50px; height: 50px; border: 1px solid black; cursor: pointer;">{{i}}</span>
-            <span @click="nextPage(4)"v-if= pager.existNext style="width: 50px; height: 50px; border: 1px solid black; margin-right: 5px; cursor: pointer;">다음</span>            </div>
+            <span @click="transferPage(pager.prevBlock)" v-if= pager.existPrev style="width: 50px; height: 50px; border: 1px solid black; margin-right: 5px; cursor: pointer;">이전</span>
+            <span @click="transferPage(i-1)" v-for = "i in pages" :key="i"  style="width: 50px; height: 50px; border: 1px solid black; cursor: pointer;">{{i}}</span>
+            <span @click="transferPage(pager.nextBlock)" v-if= pager.existNext style="width: 50px; height: 50px; border: 1px solid black; margin-right: 5px; cursor: pointer;">다음</span>
+            </div>
             <!--<v-pagination v-model="page" :length="5" :total-visible="5"></v-pagination>-->
         </div>
     </div>
@@ -55,11 +62,18 @@
         methods :{
             transferPage(d){
                 alert("페이지: "+(d-1))
-                this.$store.dispatch('search/transferPage',{cate :'movie',searchWord : 'null', pageNumber : d-1})
+                this.$store.dispatch('search/transferPage',{cate :'movie',searchWord :'null', pageNumber : d})
             },
-            nextPage(d){
-                this.$store.dispatch('search/transferPage',{cate :'movie',searchWord : 'null', pageNumber : `${this.$store.state.search.pages.pageStart}`+d})
+            search(){
+                let searchWord = document.getElementById('searchWord').value
+                if(searchWord === '') searchWord = 'null'
+                this.$store.dispatch('search/transferPage',{cate :'movie',searchWord : searchWord, pageNumber : 0})
+            },
+            retrieveOne(d){
+                this.$store.dispatch('search/retrieveOne',{cate :'movie',searchWord : d})
             }
+
+
         }
 
     }

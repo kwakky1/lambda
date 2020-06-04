@@ -40,7 +40,7 @@ public class ProxyController{
         upload.upload();
         return null;
     }
-    @GetMapping("/movie/{searchWord}")
+    @GetMapping("/movies/{searchWord}")
     public HashMap<String ,Object> movie(@PathVariable String searchWord){
         pxy.print("넘어온 키워드"+searchWord);
         if(movieRepository.count()==0){crawler.movie();}
